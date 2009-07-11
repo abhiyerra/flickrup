@@ -2,7 +2,7 @@
 
 # flickrup.rb - A utility to upload photos to Flickr.
 #
-# This work is public domain.
+# This work is put in public domain by Kesava Abhinav Yerra.
 #
 # Create a config file ~/.flickrup and add your Flickr API Key and secret key
 # For example:
@@ -28,7 +28,6 @@
 #  - automatically open a browser window with login_url
 #  - Ability to create a set before uploading or 
 #     post to existing set.
-#  -
 
 require 'yaml'
 require 'rubygems'
