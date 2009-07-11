@@ -20,6 +20,15 @@
 #
 # It requires curl to be installed on your computer. Also it requires the 
 # rest_client gem to be installed.
+#
+# TODO:
+#  - remove Rest Client
+#  - getopt
+#  - pretty print the output
+#  - automatically open a browser window with login_url
+#  - Ability to create a set before uploading or 
+#     post to existing set.
+#  -
 
 require 'yaml'
 require 'rubygems'
@@ -31,8 +40,6 @@ ConfigFile = '/Users/abhi/.flickrup.yaml'
 
 RestUrl = 'http://api.flickr.com/services/rest/'
 UploadUrl = 'http://api.flickr.com/services/upload/'
-
-#RestClient.log = 'stdout'
 
 def gen_sig params
   sig_str = @config['secret'] + params.sort.collect do |key,value| 
