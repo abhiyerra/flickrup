@@ -31,9 +31,8 @@
 
 require 'yaml'
 require 'rubygems'
-require 'rest_client'
 require 'md5'
-require 'json'
+require 'rexml/document'
 
 ConfigFile = '/Users/abhi/.flickrup.yaml'
 
@@ -44,8 +43,6 @@ def gen_sig params
   sig_str = @config['secret'] + params.sort.collect do |key,value| 
     "#{key}#{value}" unless key.eql? 'photo'
   end.join('')
-
-  p sig_str
 
   MD5.hexdigest sig_str
 end
@@ -64,23 +61,21 @@ def create_login_url frob
   gets
 end
 
-def call_method params={}, upload=false
-  url = upload ? UploadUrl : RestUrl
+def call_method params={}
+  url = params.has_key? 'photo' ? UploadUrl : RestUrl
 
   params['api_key'] = @config['api_key']
-  params['format'] = 'json'
   params['auth_token'] = @config['auth_token'] if @config.has_key? 'auth_token'
   params['api_sig'] = gen_sig params
 
-  if upload
-    req = params.collect do |k,v|
-      "-F #{k}=#{v.kind_of?(File) ? '@' : ''}'#{v.kind_of?(File) ? v.path : v}'"
-    end.join(' ')
+  req = params.collect do |k,v|
+    "-F #{k}=#{v.kind_of?(File) ? '@' : ''}'#{v.kind_of?(File) ? v.path : v}'"
+  end.join(' ')
 
-    return `curl -s #{req} #{url}`
-  else
-    return JSON::parse(RestClient.post(url, params).gsub(/^jsonFlickrApi\(/, '').gsub(/\)$/, ''))
-  end
+  result = `curl -s #{req} #{url}`
+  
+  doc = REXML::Document.new(result)
+  doc.root
 end
 
 def load_config
@@ -103,22 +98,17 @@ def upload path
       files.each { |file| upload file }
     end
   else
-    puts call_method({'photo' => File.new(path, 'rb')}, upload=true)
+    puts call_method({'photo' => File.new(path, 'rb')})
   end
 end
 
 def main
   load_config 
   unless @config.has_key? 'auth_token'
-    frob = call_method 'method' => 'flickr.auth.getFrob'
-    frob = frob["frob"]["_content"]
-
+    frob = call_method('method' => 'flickr.auth.getFrob').elements['frob'].text
     create_login_url frob
+    @config['auth_token'] = call_method('method' => 'flickr.auth.getToken', 'frob' => frob).elements['auth'].elements['token'].text
 
-    gettoken = call_method 'method' => 'flickr.auth.getToken',
-                           'frob' => frob
-
-    @config['auth_token'] = gettoken["auth"]["token"]["_content"]
     write_config
   end
 
