@@ -18,11 +18,9 @@
 # Note that currently flickrup is uploads recursively. In later versions I hope
 # to address this, but right now I'm lazy.
 #
-# It requires curl to be installed on your computer. Also it requires the 
-# rest_client gem to be installed.
+# It requires curl to be installed on your computer.
 #
 # TODO:
-#  - remove Rest Client
 #  - getopt
 #  - pretty print the output
 #  - automatically open a browser window with login_url
@@ -34,7 +32,7 @@ require 'rubygems'
 require 'md5'
 require 'rexml/document'
 
-ConfigFile = '/Users/abhi/.flickrup.yaml'
+ConfigFile = "#{ENV['HOME']}/.flickrup.yaml"
 
 RestUrl = 'http://api.flickr.com/services/rest/'
 UploadUrl = 'http://api.flickr.com/services/upload/'
