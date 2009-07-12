@@ -15,14 +15,11 @@
 # or
 # flickrup.rb path_to_file
 #
-# Note that currently flickrup is uploads recursively. In later versions I hope
-# to address this, but right now I'm lazy.
-#
+# Note that currently flickrup is uploads recursively.
 # It requires curl to be installed on your computer.
 #
 # TODO:
 #  - getopt
-#  - pretty print the output
 #  - automatically open a browser window with login_url
 #  - Ability to create a set before uploading or 
 #     post to existing set.
@@ -60,7 +57,7 @@ def create_login_url frob
 end
 
 def call_method params={}
-  url = params.has_key? 'photo' ? UploadUrl : RestUrl
+  url = params.has_key?('photo') ? UploadUrl : RestUrl
 
   params['api_key'] = @config['api_key']
   params['auth_token'] = @config['auth_token'] if @config.has_key? 'auth_token'
@@ -96,7 +93,12 @@ def upload path
       files.each { |file| upload file }
     end
   else
-    puts call_method({'photo' => File.new(path, 'rb')})
+    up = call_method({'photo' => File.new(path, 'rb')})
+    if up.elements['photoid']
+      puts "Uploaded: #{path}"
+    else
+      puts "Failed: #{path}"
+    end
   end
 end
 
