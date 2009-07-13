@@ -28,6 +28,7 @@ require 'yaml'
 require 'rubygems'
 require 'md5'
 require 'rexml/document'
+require 'optparse'
 
 ConfigFile = "#{ENV['HOME']}/.flickrup.yaml"
 
@@ -86,7 +87,7 @@ def write_config
   open(ConfigFile, 'w') { |out| YAML::dump(@config, out) }
 end
 
-def upload path
+def upload path, params={}
   if File.directory?(path)
     files = Dir.entries(path) - [".", ".."]
     Dir.chdir(path) do
@@ -112,7 +113,21 @@ def main
     write_config
   end
 
-  ARGV.each { |path| upload path }
+  upload = false
+  options = {}
+  OptionParser.new do |opts|
+    opts.on('--upload', '-u', 'Upload some pictures') { upload = true }
+    opts.on('--list-sets', '-l', 'List all sets') do  
+      sets = call_method('method' => 'flickr.photosets.getList')
+      sets.each_element('//photoset') do |photoset|
+        puts "#{photoset.attributes['id']} #{photoset.elements['title'].text}"
+      end
+
+      exit
+    end
+  end.parse!
+
+  ARGV.each { |path| upload path } if upload.eql? true
 end
 
 main
