@@ -17,12 +17,6 @@
 #
 # Note that currently flickrup is uploads recursively.
 # It requires curl to be installed on your computer.
-#
-# TODO:
-#  - getopt
-#  - automatically open a browser window with login_url
-#  - Ability to create a set before uploading or 
-#     post to existing set.
 
 require 'yaml'
 require 'rubygems'
@@ -136,10 +130,10 @@ def main
       end
 
       if set
-        sets = call_method('method' => 'flickr.photosets.getPhotos', 
+        photos = call_method('method' => 'flickr.photosets.getPhotos', 
                            'photoset_id' => set,
                            'privacy_filter' => '1')
-        sets.each_element('//photo') do |photo|
+        photos.each_element('//photo') do |photo|
           puts "http://farm#{photo.attributes['farm']}.static.flickr.com/#{photo.attributes['server']}/#{photo.attributes['id']}_#{photo.attributes['secret']}_b.jpg"
         end
       end
@@ -148,18 +142,16 @@ def main
     end
 
     opts.on('--create', '-c', 'Create') do
-      if sets
-        sets = call_method('method' => 'flickr.photosets.getList')
-        sets.each_element('//photoset') do |photoset|
-          puts "#{photoset.attributes['id']} #{photoset.elements['title'].text}"
-        end
+      if sets && upload
       end
 
-      exit
+      if set && upload
+        options[:set] = set
+      end
     end
   end.parse!
 
-  ARGV.each { |path| upload path } if upload.eql? true
+  ARGV.each { |path| upload path, options } if upload.eql? true
 end
 
 main
