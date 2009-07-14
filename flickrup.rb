@@ -1,4 +1,4 @@
-#!/usr/bin/env jruby
+#!/usr/bin/env ruby
 
 # flickrup.rb - A utility to upload photos to Flickr.
 #
@@ -114,13 +114,45 @@ def main
   end
 
   upload = false
+  set = nil
+  sets = false
+
   options = {}
   OptionParser.new do |opts|
     opts.on('--upload', '-u', 'Upload some pictures') { upload = true }
-    opts.on('--list-sets', '-l', 'List all sets') do  
-      sets = call_method('method' => 'flickr.photosets.getList')
-      sets.each_element('//photoset') do |photoset|
-        puts "#{photoset.attributes['id']} #{photoset.elements['title'].text}"
+    opts.on('--set [SET]', '-s', String, 'Sets') do |set|
+      if set.nil?
+        sets = true 
+      else
+        set = set
+      end
+    end
+    opts.on('--list', '-l', 'List') do
+      if sets
+        sets = call_method('method' => 'flickr.photosets.getList')
+        sets.each_element('//photoset') do |photoset|
+          puts "#{photoset.attributes['id']} #{photoset.elements['title'].text}"
+        end
+      end
+
+      if set
+        sets = call_method('method' => 'flickr.photosets.getPhotos', 
+                           'photoset_id' => set,
+                           'privacy_filter' => '1')
+        sets.each_element('//photo') do |photo|
+          puts "http://farm#{photo.attributes['farm']}.static.flickr.com/#{photo.attributes['server']}/#{photo.attributes['id']}_#{photo.attributes['secret']}_b.jpg"
+        end
+      end
+
+      exit
+    end
+
+    opts.on('--create', '-c', 'Create') do
+      if sets
+        sets = call_method('method' => 'flickr.photosets.getList')
+        sets.each_element('//photoset') do |photoset|
+          puts "#{photoset.attributes['id']} #{photoset.elements['title'].text}"
+        end
       end
 
       exit
