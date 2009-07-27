@@ -1,0 +1,20 @@
+flickrup.rb - A utility to upload photos to Flickr.
+
+This work is put in public domain by Kesava Abhinav Yerra.
+
+---
+
+Create a config file ~/.flickrup and add your Flickr API Key and secret key
+For example:
+ 
+secret: SECRET_KEY
+api_key: API_KEY
+ 
+To run the script do something like the following:
+flickrup.rb dir_to_upload
+or
+flickrup.rb path_to_file
+
+Note that currently flickrup is uploads recursively.
+It requires curl to be installed on your computer.
+
