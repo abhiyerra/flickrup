@@ -41,18 +41,17 @@ Note that currently flickrup is uploads recursively.
 
 ## Download
 
-List the links to the pictures in the set:
+Just add --download to any of the Set commands.
+
+Ex. This will download all the items in {set_id} to the optional
+folder.
+
 ```
-   flickrup.rb --set SET_ID --list
+   flickrup.rb --set {set_id} --download {folder}
 ```
 
-Get the SET_ID by doing a '--set --list'.
+## Requires
 
-Requirements:
+ - curl
 
-Curl needs to be installed on your computer.
 
-TODO:
-    - Add to existing set
-    - Create a new set and upload images to that set
-    - Upload to existing set if it exists
