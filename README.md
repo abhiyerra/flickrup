@@ -1,25 +1,34 @@
-flickrup.rb - A utility to upload photos to Flickr.
-
----
+# flickrup.rb 
+## A utility to upload photos to Flickr.
 
 Create a config file ~/.flickrup and add your Flickr API Key and secret key
 For example:
- 
-secret: SECRET_KEY
-api_key: API_KEY
+
+``` 
+   secret: SECRET_KEY
+   api_key: API_KEY
+```
  
 To run the script do something like the following:
-flickrup.rb --upload dir_to_upload
+```
+   flickrup.rb --upload dir_to_upload
+```
 or
-flickrup.rb --upload path_to_file
+```
+   flickrup.rb --upload path_to_file
+```
 
 Note that currently flickrup is uploads recursively.
 
 List the current sets
-flickrup.rb --set --list
+```
+   flickrup.rb --set --list
+```
 
 List the links to the pictures in the set:
-flickrup.rb --set SET_ID --list
+```
+   flickrup.rb --set SET_ID --list
+```
 
 Get the SET_ID by doing a '--set --list'.
 
