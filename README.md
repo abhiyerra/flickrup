@@ -2,12 +2,12 @@
 A utility to upload and download photos from Flickr.
 
 ## Config
-Create a config file ~/.flickrup and add your Flickr API Key and secret key
+Create a config file flickrup.yml and add your Flickr API Key and secret key
 For example:
 
 ``` 
-secret: SECRET_KEY
 api_key: API_KEY
+secret: SECRET_KEY
 ```
  
 ## Upload
@@ -53,5 +53,3 @@ flickrup.rb --set {set_id} --download {folder}
 ## Requires
 
  - curl
-
-

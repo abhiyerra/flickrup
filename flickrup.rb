@@ -10,10 +10,10 @@ require 'md5'
 require 'rexml/document'
 require 'optparse'
 
-ConfigFile = "#{ENV['HOME']}/.flickrup.yaml"
+CONFIG_FILE = "flickrup.yml"
 
-RestUrl = 'http://api.flickr.com/services/rest/'
-UploadUrl = 'http://api.flickr.com/services/upload/'
+REST_URL = 'http://api.flickr.com/services/rest/'
+UPLOAD_URL = 'http://api.flickr.com/services/upload/'
 
 def gen_sig params
   sig_str = @config['secret'] + params.sort.collect do |key,value| 
@@ -38,7 +38,7 @@ def create_login_url frob
 end
 
 def call_method params={}
-  url = params.has_key?('photo') ? UploadUrl : RestUrl
+  url = params.has_key?('photo') ? UPLOAD_URL : REST_URL
 
   params['api_key'] = @config['api_key']
   params['auth_token'] = @config['auth_token'] if @config.has_key? 'auth_token'
@@ -56,7 +56,7 @@ end
 
 def load_config
   begin
-    @config = YAML::load_file ConfigFile
+    @config = YAML::load_file CONFIG_FILE
   rescue
     puts "Failed to load config"
     exit
@@ -64,7 +64,7 @@ def load_config
 end
 
 def write_config
-  open(ConfigFile, 'w') { |out| YAML::dump(@config, out) }
+  open(CONFIG_FILE, 'w') { |out| YAML::dump(@config, out) }
 end
 
 def upload path, params={}
