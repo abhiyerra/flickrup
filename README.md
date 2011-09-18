@@ -27,29 +27,13 @@ Note that currently flickrup is uploads recursively.
 flickrup.rb --sets
 ```
 
-### List the pictures in set
+### Download pictures in set
 
 ```
 flickrup.rb --set {set_id}
 ```
 
-### List pictures not in sets.
-
-```
-flickrup.rb --no-set-pics
-```
-
-## Download
-
-Just add --download to any of the Set commands.
-
-Ex. This will download all the items in {set_id} to the optional
-folder.
-
-```
-flickrup.rb --set {set_id} --download {folder}
-```
-
 ## Requires
 
  - curl
+ - wget
