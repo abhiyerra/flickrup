@@ -120,7 +120,7 @@ def main
                            'photoset_id' => set,
                            'privacy_filter' => '1')
         photos.each_element('//photo') do |photo|
-          puts "http://farm#{photo.attributes['farm']}.static.flickr.com/#{photo.attributes['server']}/#{photo.attributes['id']}_#{photo.attributes['secret']}_b.jpg"
+          puts "http://farm#{photo.attributes['farm']}.static.flickr.com/#{photo.attributes['server']}/#{photo.attributes['id']}_#{photo.attributes['secret']}.jpg"
         end
       end
 
