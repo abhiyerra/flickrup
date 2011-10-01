@@ -8,6 +8,7 @@ require 'rubygems'
 require 'md5'
 require 'json'
 require 'optparse'
+require 'parallel'
 
 module FlickrUp
   CONFIG_FILE = "flickrup.yml"
@@ -116,14 +117,16 @@ module FlickrUp
 
         Dir.chdir(set_name)
 
-        photo_ids.each do |photo_id|
+        Parallel.map(photo_ids, :in_processes => 4) do |photo_id|
           photo_info = call_method('method' => 'flickr.photos.getInfo', 'photo_id' => photo_id)
           photo = photo_info['photo']
 
-          cmd = %{wget -O "#{photo['title']['_content']}.jpg" http://farm#{photo['farm']}.static.flickr.com/#{photo['server']}/#{photo['id']}_#{photo['originalsecret']}_o.jpg}
+          cmd = %{wget -O "#{photo['title']['_content']}-#{photo['id']}.jpg" http://farm#{photo['farm']}.static.flickr.com/#{photo['server']}/#{photo['id']}_#{photo['originalsecret']}_o.jpg}
           puts cmd
           `#{cmd}`
         end
+
+        exit
       end
       opts.on('--sets', '-S', 'List the sets') do
         sets = call_method('method' => 'flickr.photosets.getList')
